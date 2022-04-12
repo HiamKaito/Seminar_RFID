@@ -5,7 +5,10 @@ module com.example.seminar_rfid {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires CAENRFIDLibrary;
+    requires java.sql;
 
     opens com.example.seminar_rfid to javafx.fxml;
     exports com.example.seminar_rfid;
+    exports com.example.seminar_rfid.DAO;
+    opens com.example.seminar_rfid.DAO to javafx.fxml;
 }
