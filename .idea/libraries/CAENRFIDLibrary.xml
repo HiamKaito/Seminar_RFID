@@ -1,8 +1,9 @@
 <component name="libraryTable">
   <library name="CAENRFIDLibrary">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../New folder/New folder/CAENRFIDLibrary.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../New folder/New folder/RXTXcomm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/library/CAENRFIDLibrary.jar!/" />
+      <root url="jar://$PROJECT_DIR$/library/RXTXcomm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/library/mysql-connector-java-5.1.40-bin.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

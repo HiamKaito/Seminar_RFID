@@ -1,4 +1,4 @@
-package com.example.seminar_rfid;
+package com.example.seminar_rfid.model;
 
 public class BookModel {
     private String BookID;
@@ -11,6 +11,10 @@ public class BookModel {
         BookAuthor = bookAuthor;
         BookStatus = bookStatus;
         BookTitle = bookTitle;
+    }
+
+    public BookModel() {
+
     }
 
     public String getBookID() {
@@ -30,6 +34,15 @@ public class BookModel {
     }
 
     public String getBookStatus() {
+        if(BookStatus.equalsIgnoreCase("0")) {
+            BookStatus = "Registered";
+        }
+        if(BookStatus.equalsIgnoreCase("1")) {
+            BookStatus = "Received";
+        }
+        if(BookStatus.equalsIgnoreCase("2")) {
+            BookStatus = "Returned";
+        }
         return BookStatus;
     }
 

@@ -1,12 +1,13 @@
 package com.example.seminar_rfid;
 
+import com.example.seminar_rfid.BUS.BookBUS;
+import com.example.seminar_rfid.model.BookModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -15,20 +16,34 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     @FXML
     protected TableView tbl_book;
     private final ObservableList<BookModel> BookData =
-            FXCollections.observableArrayList(
-                    new BookModel("1234567", "Stephen King", "0", "Dark"),
-                    new BookModel("3234567", "Stephen Hawking", "1", "Dark 2")
-            );
+            FXCollections.observableArrayList();
+
+    ArrayList<BookModel> model = new ArrayList<>();
+    BookBUS bus;
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tbl_book.setEditable(true);
+        try {
+            bus = new BookBUS();
+            model = bus.getBookInfByID();
+            BookData.addAll(model);
+            for(BookModel model: model){
+                System.out.println(model.getBookID());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //book ID means RFID ID
         TableColumn bookID = new TableColumn("Book ID");
         bookID.setCellValueFactory(new PropertyValueFactory<BookModel, String >("BookID"));
@@ -48,7 +63,7 @@ public class MainController implements Initializable {
         TableColumn endDate = new TableColumn("EndDate");
         //borrow Status - 0: registered, 1: received, 2: returned
         TableColumn bookStatus = new TableColumn("Book Status");
-        bookStatus.setCellValueFactory(new PropertyValueFactory<BookModel, String >("BookStatus"));
+        bookStatus.setCellValueFactory(new PropertyValueFactory<BookModel, Integer>("BookStatus"));
 
         tbl_book.setItems(BookData);
         tbl_book.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus);

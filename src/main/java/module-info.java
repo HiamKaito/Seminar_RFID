@@ -11,4 +11,6 @@ module com.example.seminar_rfid {
     exports com.example.seminar_rfid;
     exports com.example.seminar_rfid.DAO;
     opens com.example.seminar_rfid.DAO to javafx.fxml;
+    exports com.example.seminar_rfid.model;
+    opens com.example.seminar_rfid.model to javafx.fxml;
 }
