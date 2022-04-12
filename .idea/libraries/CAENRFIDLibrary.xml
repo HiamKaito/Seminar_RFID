@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="CAENRFIDLibrary">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../New folder/New folder/CAENRFIDLibrary.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../New folder/New folder/RXTXcomm.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
