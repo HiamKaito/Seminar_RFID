@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Read {
 
-    static List<String> idRFID = new ArrayList<>();
+    public static List<String> idRFID = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
 
@@ -15,7 +15,6 @@ public class Read {
         countDown.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-//                System.out.println("A");
                 searchItem();
                 displayInfor();
                 idRFID = new ArrayList<>();
@@ -61,7 +60,7 @@ public class Read {
                 //id san pham la duy nhat: exmple 48718273123
                 //
                 for (int i = 0; i < MyTags.length; i++) {
-//                    System.out.println("EPC: " + hex(MyTags[i].GetId()) +
+//                    System.out.println("EPC: " + hex(MyTags[i].GetId()) );
 //                            " | Antenna : " + MyTags[i].GetAntenna() +
 //                            " | TID:" + (MyTags[i].GetTID()) +
 //                            " | RSSI : " + Integer.valueOf(MyTags[i].GetRSSI()));

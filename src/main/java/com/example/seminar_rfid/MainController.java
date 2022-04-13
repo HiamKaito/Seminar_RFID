@@ -1,6 +1,7 @@
 package com.example.seminar_rfid;
 
 import com.example.seminar_rfid.BUS.BookBUS;
+import com.example.seminar_rfid.BUS.ReadBUS;
 import com.example.seminar_rfid.model.BookModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainController implements Initializable {
     @FXML
@@ -26,34 +29,71 @@ public class MainController implements Initializable {
             FXCollections.observableArrayList();
 
     ArrayList<BookModel> model = new ArrayList<>();
-    BookBUS bus;
+    BookBUS bookBus;
+    ReadBUS readBUS;
 
+    Read readRFID;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tbl_book.setEditable(true);
         try {
-            bus = new BookBUS();
-            model = bus.getBookInfByID();
-            BookData.addAll(model);
-            for(BookModel model: model){
-                System.out.println(model.getBookID());
-            }
+            bookBus = new BookBUS();
+            readBUS = new ReadBUS();
+//            model = bookBus.getBookInfByID();
+
+
+            Timer countDown = new Timer();
+            countDown.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    BookData.clear();
+                    model.clear();
+
+
+                    readRFID.searchItem();
+//                    displayInfor();
+                    for (String s : readRFID.idRFID) {
+                        System.out.println(s);
+                        model.add(
+                                bookBus.getBookInfor(readBUS.getBookID(s))
+                        );
+                    }
+                    BookData.addAll(model);
+
+                    readRFID.idRFID = new ArrayList<>();
+
+                }
+            }, 0, 1000);
+
+
+
+
+
+//            model.add(
+//                    bookBus.getBookInfor(readBUS.getBookID("E28011606000020958CD98FE"))
+//            );
+
+
+
+//            for (BookModel model : model) {
+//                System.out.println(model.getBookID());
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         //book ID means RFID ID
         TableColumn bookID = new TableColumn("Book ID");
-        bookID.setCellValueFactory(new PropertyValueFactory<BookModel, String >("BookID"));
+        bookID.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookID"));
 
         TableColumn bookTitle = new TableColumn("Book Title");
-        bookTitle.setCellValueFactory(new PropertyValueFactory<BookModel, String >("BookTitle"));
+        bookTitle.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookTitle"));
 
         TableColumn borrowID = new TableColumn("Borrow ID");
         TableColumn bookAuthor = new TableColumn("Book Author");
-        bookAuthor.setCellValueFactory(new PropertyValueFactory<BookModel, String >("BookAuthor"));
+        bookAuthor.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookAuthor"));
 
         //beginDate - Ngay muon sach
         TableColumn beginDate = new TableColumn("Begin Date");
@@ -72,9 +112,9 @@ public class MainController implements Initializable {
         tbl_book.setRowFactory(tv -> {
             TableRow<BookModel> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     BookModel rowData = row.getItem();
-                    System.out.println("Double click on: "+rowData.getBookID());
+                    System.out.println("Double click on: " + rowData.getBookID());
                     //Open new Stage of Book Log
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("BookLog.fxml"));
@@ -87,12 +127,12 @@ public class MainController implements Initializable {
                         mainCtl.transferMessage(rowData.getBookID());
                         stage.setScene(scene);
                         stage.show();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             });
-            return row ;
+            return row;
         });
     }
 }
