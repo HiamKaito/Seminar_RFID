@@ -1,17 +1,17 @@
 package com.example.seminar_rfid;
 
+import com.example.seminar_rfid.model.BorrowModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -23,8 +23,8 @@ public class BookLogController implements Initializable {
 
     private final ObservableList<BorrowModel> BorrowData =
             FXCollections.observableArrayList(
-                    new BorrowModel("11111111", "ID1", new Date(), new Date(), new Date(), 1),
-                    new BorrowModel("22222222", "ID2", new Date(), new Date(), new Date(), 2)
+                    new BorrowModel("11111111", "ID1", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), 1),
+                    new BorrowModel("22222222", "ID2", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), 2)
             );
 
     @Override

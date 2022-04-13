@@ -1,22 +1,26 @@
-package com.example.seminar_rfid;
+package com.example.seminar_rfid.model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class BorrowModel {
     private String borrowID;
     private String userID;
-    private Date borrow_beginDate;
-    private Date borrow_endDate;
-    private Date borrow_returnDate;
+    private Timestamp borrow_beginDate;
+    private Timestamp borrow_endDate;
+    private Timestamp borrow_returnDate;
     private int borrowStatus;
 
-    public BorrowModel(String borrowID, String userID, Date borrow_beginDate, Date borrow_endDate, Date borrow_returnDate, int borrowStatus) {
+    public BorrowModel(String borrowID, String userID, Timestamp borrow_beginDate, Timestamp borrow_endDate, Timestamp borrow_returnDate, int borrowStatus) {
         this.borrowID = borrowID;
         this.userID = userID;
         this.borrow_beginDate = borrow_beginDate;
         this.borrow_endDate = borrow_endDate;
         this.borrow_returnDate = borrow_returnDate;
         this.borrowStatus = borrowStatus;
+    }
+
+    public BorrowModel() {
     }
 
     public String getBorrowID() {
@@ -35,27 +39,27 @@ public class BorrowModel {
         this.userID = userID;
     }
 
-    public Date getBorrow_beginDate() {
+    public Timestamp getBorrow_beginDate() {
         return borrow_beginDate;
     }
 
-    public void setBorrow_beginDate(Date borrow_beginDate) {
+    public void setBorrow_beginDate(Timestamp borrow_beginDate) {
         this.borrow_beginDate = borrow_beginDate;
     }
 
-    public Date getBorrow_endDate() {
+    public Timestamp getBorrow_endDate() {
         return borrow_endDate;
     }
 
-    public void setBorrow_endDate(Date borrow_endDate) {
+    public void setBorrow_endDate(Timestamp borrow_endDate) {
         this.borrow_endDate = borrow_endDate;
     }
 
-    public Date getBorrow_returnDate() {
+    public Timestamp getBorrow_returnDate() {
         return borrow_returnDate;
     }
 
-    public void setBorrow_returnDate(Date borrow_returnDate) {
+    public void setBorrow_returnDate(Timestamp borrow_returnDate) {
         this.borrow_returnDate = borrow_returnDate;
     }
 
