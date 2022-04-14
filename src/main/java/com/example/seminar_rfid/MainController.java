@@ -77,9 +77,11 @@ public class MainController implements Initializable {
                         );
                         borrowModel.add(
                                 borrowDetailBUS.getBorrowId(readBUS.getBookID(s))
+//                                borrowDetailBUS.getBorrowId("111")
                         );
                     }
                     RFIDData.addAll(readModel);
+                    BorrowData.addAll(borrowModel);
 
                     readRFID.idRFID = new ArrayList<>();
 
@@ -124,7 +126,7 @@ public class MainController implements Initializable {
         bookStatus.setCellValueFactory(new PropertyValueFactory<BookModel, Integer>("BookStatus"));
 
         tbl_rfid.setItems(RFIDData);
-
+        tbl_rfid.setItems(BorrowData);
         tbl_rfid.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus, beginDate, returnDate, endDate);
 
         tbl_book.setItems(BookData);
