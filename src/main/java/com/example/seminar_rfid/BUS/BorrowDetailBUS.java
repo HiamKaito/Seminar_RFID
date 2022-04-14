@@ -14,11 +14,13 @@ public class BorrowDetailBUS {
      * Xử lý các lệnh trong SQL
      */
     private BorrowDetailDAO DAO;
+    BorrowBUS borrowBUS;
 
     public BorrowDetailBUS() throws Exception {
         list = new ArrayList<>();
         DAO = new BorrowDetailDAO();
         list = DAO.readDB();
+
     }
 
     public ArrayList<BorrowDetailModel> getBookInfByID() {
@@ -32,6 +34,15 @@ public class BorrowDetailBUS {
             }
         }
 
+        return null;
+    }
+
+    public BorrowModel getBorrowId(String bookID){
+        for (BorrowDetailModel model : list){
+            if(model.getBookID().equals(bookID)){
+                return borrowBUS.getBookInfByID(model.getBorrowID());
+            }
+        }
         return null;
     }
 
