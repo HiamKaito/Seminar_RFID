@@ -6,6 +6,7 @@ import com.example.seminar_rfid.model.BookModel;
 import com.example.seminar_rfid.model.BorrowModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowBUS {
     public ArrayList<BorrowModel> bookModelsArrayList;
@@ -33,5 +34,13 @@ public class BorrowBUS {
         return null;
     }
 
+    public void getAllByDate(String date_1, String date_2) {
+        try {
+            bookModelsArrayList = DAO.readDB("`borrow_begindate` >= '"+date_1+
+                    "' AND `borrow_enddate` <= '"+date_2+"' AND `borrow_status` = 2");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
