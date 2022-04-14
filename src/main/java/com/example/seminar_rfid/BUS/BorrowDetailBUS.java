@@ -6,6 +6,7 @@ import com.example.seminar_rfid.model.BorrowDetailModel;
 import com.example.seminar_rfid.model.BorrowModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowDetailBUS {
     public ArrayList<BorrowDetailModel> list;
@@ -34,13 +35,16 @@ public class BorrowDetailBUS {
         return null;
     }
 
-    public int countBookInBorrow(String borrowID) {
-        int count =0 ;
+    public List countBookInBorrow(String borrowID) {
+        List<String> listRes = new ArrayList<>();
+
         for (BorrowDetailModel model : list) {
             if (model.getBorrowID().equals(borrowID)) {
-                count++;
+//                count++;
+                listRes.add(model.getBookID());
             }
         }
-        return count;
+        return listRes;
     }
+
 }

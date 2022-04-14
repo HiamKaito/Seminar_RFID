@@ -5,16 +5,22 @@ import com.example.seminar_rfid.BUS.BorrowBUS;
 import com.example.seminar_rfid.BUS.BorrowDetailBUS;
 import com.example.seminar_rfid.model.BorrowModel;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import org.w3c.dom.Entity;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -63,29 +69,52 @@ public class ThongKe implements Initializable {
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
 
         for (BorrowModel model : borrowBUS.bookModelsArrayList) {
-            int numberBookInBorrow = borrowDetailBUS.countBookInBorrow(model.getBorrowID());
+            List<String> listBookInBorrow = borrowDetailBUS.countBookInBorrow(model.getBorrowID());
             // search all book in borrow
-            for (int i = 0 ; i < numberBookInBorrow ; i++) {
+            for (String s : listBookInBorrow) {
                 // get book name
-                String bookName = bookBUS.getBookInfor(
-                        borrowDetailBUS.getBookId(model.getBorrowID())
-                ).getBookTitle();
+                String bookName = bookBUS.getBookInfor(s).getBookTitle();
 
                 // incr count when it already has in hash map
-                for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
-//                    if (entry.getValue().equals())
+                if (hashMap.containsValue(bookName)) {
+                    for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+                        if (entry.getValue().equals(bookName)) {
+                            int value = entry.getValue() + 1;
+                            hashMap.put(bookName, value);
+                            break;
+                        }
+                    }
+                } else {
+                    // add to hash map
+                    hashMap.put(bookName, 1);
                 }
 
             }
 
-            PieChart.Data slide = new PieChart.Data( bookName, 1);
 
-            pieChart.getData().add(slide);
-            System.out.println("A");
         }
 
-//        PieChart.Data slice1 = new PieChart.Data("USA", 1);
-//        pieChart.getData().add(slice1);
 
+        // add all value to chart
+        for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+            PieChart.Data slice = new PieChart.Data(entry.getKey(), entry.getValue());
+            pieChart.getData().add(slice);
+        }
+
+        final Label caption = new Label("");
+        caption.setTextFill(Color.WHITE);
+        caption.setStyle("-fx-font: 12 arial;");
+
+        for (final PieChart.Data data : pieChart.getData()) {
+            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    caption.setTranslateX(e.getSceneX());
+                    caption.setTranslateY(e.getSceneY());
+
+                    caption.setText(String.valueOf(data.getPieValue()));
+                }
+            });
+        }
     }
 }
