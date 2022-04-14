@@ -20,8 +20,17 @@ public class BorrowBUS {
         bookModelsArrayList = DAO.readDB();
     }
 
-    public ArrayList<BorrowModel> getBookInfByID() {
+    public ArrayList<BorrowModel> getBookInfo() {
         return bookModelsArrayList;
+    }
+
+    public BorrowModel getBookInfByID(String borrowID){
+        for(BorrowModel model : bookModelsArrayList){
+            if(model.getBorrowID().equals(borrowID)){
+                return model;
+            }
+        }
+        return null;
     }
 
 

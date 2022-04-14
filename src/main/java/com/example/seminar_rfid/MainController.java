@@ -1,8 +1,11 @@
 package com.example.seminar_rfid;
 
 import com.example.seminar_rfid.BUS.BookBUS;
+import com.example.seminar_rfid.BUS.BorrowBUS;
+import com.example.seminar_rfid.BUS.BorrowDetailBUS;
 import com.example.seminar_rfid.BUS.ReadBUS;
 import com.example.seminar_rfid.model.BookModel;
+import com.example.seminar_rfid.model.BorrowModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -24,13 +28,23 @@ import java.util.TimerTask;
 
 public class MainController implements Initializable {
     @FXML
-    protected TableView tbl_book;
+    protected TableView tbl_book, tbl_rfid;
+    private final ObservableList<BookModel> RFIDData =
+            FXCollections.observableArrayList();
     private final ObservableList<BookModel> BookData =
             FXCollections.observableArrayList();
+    private final ObservableList<BorrowModel> BorrowData =
+            FXCollections.observableArrayList();
 
-    ArrayList<BookModel> model = new ArrayList<>();
+    ArrayList<BookModel> readModel = new ArrayList<>();
+    ArrayList<BookModel> bookModel = new ArrayList<>();
+    ArrayList<BorrowModel> borrowModel = new ArrayList<>();
+
+
     BookBUS bookBus;
     ReadBUS readBUS;
+    BorrowBUS borrowBUS;
+    BorrowDetailBUS borrowDetailBUS;
 
     Read readRFID;
 
@@ -41,26 +55,31 @@ public class MainController implements Initializable {
         try {
             bookBus = new BookBUS();
             readBUS = new ReadBUS();
-//            model = bookBus.getBookInfByID();
+            borrowBUS = new BorrowBUS();
+            borrowDetailBUS = new BorrowDetailBUS();
 
+            bookModel = bookBus.getBookInfByID();
 
             Timer countDown = new Timer();
             countDown.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    BookData.clear();
-                    model.clear();
-
+                    RFIDData.clear();
+                    readModel.clear();
+                    borrowModel.clear();
 
                     readRFID.searchItem();
 //                    displayInfor();
                     for (String s : readRFID.idRFID) {
                         System.out.println(s);
-                        model.add(
+                        readModel.add(
                                 bookBus.getBookInfor(readBUS.getBookID(s))
                         );
+                        borrowModel.add(
+                                borrowDetailBUS.getBorrowId(readBUS.getBookID(s))
+                        );
                     }
-                    BookData.addAll(model);
+                    RFIDData.addAll(readModel);
 
                     readRFID.idRFID = new ArrayList<>();
 
@@ -68,23 +87,14 @@ public class MainController implements Initializable {
             }, 0, 1000);
 
 
-
-
-
-//            model.add(
-//                    bookBus.getBookInfor(readBUS.getBookID("E28011606000020958CD98FE"))
-//            );
-
-
-
-//            for (BookModel model : model) {
-//                System.out.println(model.getBookID());
-//            }
+            for (BookModel model : bookModel) {
+                BookData.addAll(model);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //book ID means RFID ID
+        //book ID - RFID ID
         TableColumn bookID = new TableColumn("Book ID");
         bookID.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookID"));
 
@@ -92,18 +102,30 @@ public class MainController implements Initializable {
         bookTitle.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookTitle"));
 
         TableColumn borrowID = new TableColumn("Borrow ID");
+
+
         TableColumn bookAuthor = new TableColumn("Book Author");
         bookAuthor.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookAuthor"));
 
         //beginDate - Ngay muon sach
         TableColumn beginDate = new TableColumn("Begin Date");
+        beginDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_beginDate"));
+
         //returnDate - Ngay tra sach thuc te
         TableColumn returnDate = new TableColumn("Return Date");
+        returnDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_returnDate"));
+
         //endDate - Ngay dang ky tra sach
         TableColumn endDate = new TableColumn("EndDate");
+        endDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_endDate"));
+
         //borrow Status - 0: registered, 1: received, 2: returned
         TableColumn bookStatus = new TableColumn("Book Status");
         bookStatus.setCellValueFactory(new PropertyValueFactory<BookModel, Integer>("BookStatus"));
+
+        tbl_rfid.setItems(RFIDData);
+
+        tbl_rfid.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus, beginDate, returnDate, endDate);
 
         tbl_book.setItems(BookData);
         tbl_book.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus);
