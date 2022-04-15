@@ -4,6 +4,7 @@ import com.example.seminar_rfid.BUS.BookBUS;
 import com.example.seminar_rfid.BUS.BorrowBUS;
 import com.example.seminar_rfid.BUS.BorrowDetailBUS;
 import com.example.seminar_rfid.model.BorrowModel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,13 +12,11 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ThongKe implements Initializable {
     @FXML
@@ -25,9 +24,11 @@ public class ThongKe implements Initializable {
     @FXML
     DatePicker date_1, date_2;
     @FXML
-    ComboBox cbb;
-    @FXML
     PieChart pieChart;
+    @FXML
+    Label lbl;
+
+//    public int lblBase_PosY = 250;
 
     BorrowBUS borrowBUS;
     BookBUS bookBUS;
@@ -38,6 +39,7 @@ public class ThongKe implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //btn
         btn.setOnAction(this::btnClick);
+        lbl.setVisible(false);
     }
 
     private void btnClick(ActionEvent actionEvent) {
@@ -47,8 +49,34 @@ public class ThongKe implements Initializable {
         System.out.println(localDate_1);
         System.out.println(localDate_2);
 
-        chartBook(String.valueOf(localDate_1), String.valueOf(localDate_2));
+        try {
+            chartBook(String.valueOf(localDate_1), String.valueOf(localDate_2));
+        } catch (Exception e) {
+        statusBidDiaply();
+        }
     }
+
+    public void statusBidDiaply() {
+//        lbl.setLayoutY(lblBase_PosY);
+        Timer countDown = new Timer();
+        countDown.scheduleAtFixedRate(new TimerTask() {
+            int x = 100;
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    if (x == 0) {
+                        countDown.cancel();
+                        lbl.setVisible(false);
+                    } else {
+                        x--;
+//                        lbl.setLayoutY(lbl.getLayoutY() - 1.0);
+                        lbl.setVisible(true);
+                    }
+                });
+            }
+        }, 0, 10);
+    }
+
 
     private void chartBook(String date_1, String date_2) {
         try {
@@ -85,10 +113,7 @@ public class ThongKe implements Initializable {
                     // add to hash map
                     hashMap.put(bookName, 1);
                 }
-
             }
-
-
         }
 
 

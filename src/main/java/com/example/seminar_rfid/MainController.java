@@ -8,10 +8,14 @@ import com.example.seminar_rfid.model.BookModel;
 import com.example.seminar_rfid.model.BorrowModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -29,6 +33,10 @@ import java.util.TimerTask;
 public class MainController implements Initializable {
     @FXML
     protected TableView tbl_book, tbl_rfid;
+    @FXML
+    Button btnConfim;
+
+
     private final ObservableList<BookModel> RFIDData =
             FXCollections.observableArrayList();
     private final ObservableList<BookModel> BookData =
@@ -47,10 +55,12 @@ public class MainController implements Initializable {
     BorrowDetailBUS borrowDetailBUS;
 
     Read readRFID;
+    public Timer countDown;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnConfim.setOnAction(this::btnConfirm);
         tbl_book.setEditable(true);
         try {
             bookBus = new BookBUS();
@@ -60,7 +70,7 @@ public class MainController implements Initializable {
 
             bookModel = bookBus.getBookInfByID();
 
-            Timer countDown = new Timer();
+            countDown = new Timer();
             countDown.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
@@ -71,13 +81,16 @@ public class MainController implements Initializable {
                     readRFID.searchItem();
 //                    displayInfor();
                     for (String s : readRFID.idRFID) {
-                        System.out.println(s);
+                        Memory.addToListIdBook(
+                                bookBus.getBookInfor(readBUS.getBookID(s)).getBookID()
+                        );
+
+//                        System.out.println(s);
                         readModel.add(
                                 bookBus.getBookInfor(readBUS.getBookID(s))
                         );
                         borrowModel.add(
                                 borrowDetailBUS.getBorrowId(readBUS.getBookID(s))
-//                                borrowDetailBUS.getBorrowId("111")
                         );
                     }
                     RFIDData.addAll(readModel);
@@ -86,7 +99,7 @@ public class MainController implements Initializable {
                     readRFID.idRFID = new ArrayList<>();
 
                 }
-            }, 0, 1000);
+            }, 0, 500);
 
 
             for (BookModel model : bookModel) {
@@ -158,5 +171,20 @@ public class MainController implements Initializable {
             });
             return row;
         });
+    }
+
+    private void btnConfirm(ActionEvent actionEvent) {
+        try {
+            countDown.cancel();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("ConfirmBooks.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -2,17 +2,29 @@
 
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="398.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.seminar_rfid.ThongKe">
    <children>
-      <DatePicker fx:id="date_1" layoutX="221.0" layoutY="48.0" />
-      <DatePicker fx:id="date_2" layoutX="431.0" layoutY="48.0" />
-      <Button fx:id="btn" layoutX="647.0" layoutY="48.0" mnemonicParsing="false" text="Button" />
-      <ComboBox fx:id="cbb" layoutX="42.0" layoutY="48.0" prefWidth="150.0" />
-      <PieChart fx:id="pieChart" layoutX="127.0" layoutY="88.0" />
+      <DatePicker fx:id="date_1" layoutX="68.0" layoutY="104.0" />
+      <DatePicker fx:id="date_2" layoutX="334.0" layoutY="104.0" />
+      <Button fx:id="btn" layoutX="575.0" layoutY="104.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="145.0" text="Search" />
+      <PieChart fx:id="pieChart" layoutX="129.0" layoutY="144.0" />
+      <Label layoutX="68.0" layoutY="81.0" text="Ngày bắt đầu" />
+      <Label layoutX="334.0" layoutY="81.0" text="Ngày kết thúc" />
+      <Label layoutX="247.0" layoutY="22.0" text="Thống kê sách mượn">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Label text="Label" />
+      <Label fx:id="lbl" layoutX="152.0" layoutY="250.0" text="Vui lòng nhập đầy đủ thông " textFill="#da0b0b">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
