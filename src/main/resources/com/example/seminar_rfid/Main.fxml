@@ -12,18 +12,23 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.seminar_rfid.MainController">
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.seminar_rfid.MainController">
    <children>
       <BorderPane layoutY="2.0" prefHeight="500.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
          <top>
-            <Label text="ĐĂNG KÝ TRẢ SÁCH" BorderPane.alignment="CENTER">
-               <font>
-                  <Font size="21.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" top="10.0" />
-               </padding>
-            </Label>
+            <Pane BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="305.0" text="ĐĂNG KÝ TRẢ SÁCH">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </Label>
+                  <Button fx:id="btn_Login" layoutX="723.0" layoutY="13.0" mnemonicParsing="false" text="Login" textFill="RED" />
+               </children>
+            </Pane>
          </top>
          <center>
             <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
@@ -46,7 +51,7 @@
                         </SplitPane>
                      </content>
                   </Tab>
-                <Tab disable="true" text="Books">
+                <Tab text="Books">
                      <content>
                         <TableView fx:id="tbl_book" prefHeight="200.0" prefWidth="200.0">
                            <columnResizePolicy>
