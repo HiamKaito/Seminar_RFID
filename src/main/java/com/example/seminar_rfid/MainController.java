@@ -34,7 +34,7 @@ public class MainController implements Initializable {
     @FXML
     protected TableView tbl_book, tbl_rfid;
     @FXML
-    Button btnConfim;
+    Button btnConfim, btn_Login;
 
 
     private final ObservableList<BookModel> RFIDData =
@@ -61,6 +61,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnConfim.setOnAction(this::btnConfirm);
+        btn_Login.setOnAction(this::setBtn_Login);
         tbl_book.setEditable(true);
         try {
             bookBus = new BookBUS();
@@ -183,6 +184,20 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setBtn_Login(ActionEvent event){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Login.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Login!");
+            stage.setScene(scene);
+            stage.show();
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
