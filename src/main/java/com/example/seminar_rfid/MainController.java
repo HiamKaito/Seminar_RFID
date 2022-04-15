@@ -55,7 +55,7 @@ public class MainController implements Initializable {
     BorrowDetailBUS borrowDetailBUS;
 
     Read readRFID;
-    public Timer countDown;
+    public Timer countDown = new Timer();
 
 
     @Override
@@ -70,7 +70,6 @@ public class MainController implements Initializable {
 
             bookModel = bookBus.getBookInfByID();
 
-            countDown = new Timer();
             countDown.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {

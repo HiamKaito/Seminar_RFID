@@ -18,4 +18,10 @@ public class Memory {
             listIdBook.add(idBook);
         }
     }
+
+    public static void refeshList() {
+        listIdBook = new ArrayList<>();
+    }
+
+    public static int getCountList() { return listIdBook.size(); }
 }
