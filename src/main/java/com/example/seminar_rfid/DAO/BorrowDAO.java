@@ -48,14 +48,14 @@ public class BorrowDAO {
 
         // tạo đối tượng truyền vào
         HashMap<String, Object> insertValues = new HashMap<>();
-        insertValues.put("borrow_id", model.getBorrowID());
+//        insertValues.put("borrow_id", model.getBorrowID());
         insertValues.put("borrow_begindate", model.getBorrow_beginDate());
         insertValues.put("borrow_enddate", model.getBorrow_endDate());
         insertValues.put("borrow_returndate", model.getBorrow_returnDate());
         insertValues.put("user_id", model.getUserID());
         insertValues.put("borrow_status", model.getBorrowStatus());
 
-        String condition = " UID = '" + model.getBorrowID() + "'";
+        String condition = " borrow_id = '" + model.getBorrowID() + "'";
 
         Boolean check = connect.Update(strTableName, insertValues, condition);
 

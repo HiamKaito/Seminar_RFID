@@ -45,13 +45,13 @@ public class BookDAO {
 
         // tạo đối tượng truyền vào
         HashMap<String, Object> insertValues = new HashMap<>();
-        insertValues.put("book_id", model.getBookID());
+//        insertValues.put("book_id", model.getBookID());
         insertValues.put("book_title", model.getBookTitle());
-        insertValues.put("book_status", model.getBookStatus());
+        insertValues.put("book_status", 2);
         insertValues.put("book_author", model.getBookAuthor());
 
 
-        String condition = " UID = '" + model.getBookID() + "'";
+        String condition = " book_id = '" + model.getBookID() + "'";
 
         Boolean check = connect.Update(strTableName, insertValues, condition);
 

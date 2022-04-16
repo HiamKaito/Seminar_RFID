@@ -11,21 +11,23 @@ public class Read {
     public static void main(String[] args) throws Exception {
 
         // change value display
-        Timer countDown = new Timer();
-        countDown.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                searchItem();
-                displayInfor();
-                idRFID = new ArrayList<>();
-
-            }
-        }, 0, 1000);
+//        Timer countDown = new Timer();
+//        countDown.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//        searchItem();
+        Read read = new Read();
+        read.searchItem();
+//        displayInfor();
+//                idRFID = new ArrayList<>();
+//
+//            }
+//        }, 0, 1000);
 
 
     }
 
-    public static void searchItem() {
+    public void searchItem() {
 // TODO Auto-generated method stub
         CAENRFIDReader MyReader = new CAENRFIDReader();
         try {
@@ -60,7 +62,7 @@ public class Read {
                 //id san pham la duy nhat: exmple 48718273123
                 //
                 for (int i = 0; i < MyTags.length; i++) {
-//                    System.out.println("EPC: " + hex(MyTags[i].GetId()) );
+                    System.out.println("EPC: " + hex(MyTags[i].GetId()));
 //                            " | Antenna : " + MyTags[i].GetAntenna() +
 //                            " | TID:" + (MyTags[i].GetTID()) +
 //                            " | RSSI : " + Integer.valueOf(MyTags[i].GetRSSI()));
@@ -79,27 +81,6 @@ public class Read {
             }
 
         }
-    }
-
-    public static void displayInfor() {
-        for (String s : idRFID) {
-            if (s.equals("41003200300036003400300030003100")) {
-                System.out.println("SP 1");
-            }
-            if (s.equals("300EFE2F94D01C02540BE93A")) {
-                System.out.println("SP 2");
-            }
-            if (s.equals("E200001730010136290000DD")) {
-                System.out.println("SP 3");
-            }
-
-//            System.out.println("Thong qua 1 san pham");
-        }
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
     }
 
     /**

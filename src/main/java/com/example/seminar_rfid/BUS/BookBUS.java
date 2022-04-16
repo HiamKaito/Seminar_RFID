@@ -26,9 +26,7 @@ public class BookBUS {
 
     public BookModel getBookInfor(String idBook) {
         for (BookModel model : bookModelsArrayList) {
-//            if (idBook.equals(model.getBookID())) {
             if (model.getBookID().equals(idBook)) {
-                System.out.println(model.getBookID());
                 return model;
             }
         }

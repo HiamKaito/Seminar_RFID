@@ -9,6 +9,7 @@ import com.example.seminar_rfid.model.BorrowModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,17 +25,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainController implements Initializable {
     @FXML
     protected TableView tbl_book, tbl_rfid;
     @FXML
-    Button btnConfim, btn_Login;
+    Button btnConfim, btn_Login, btnScan;
 
 
     private final ObservableList<BookModel> RFIDData =
@@ -44,17 +45,16 @@ public class MainController implements Initializable {
     private final ObservableList<BorrowModel> BorrowData =
             FXCollections.observableArrayList();
 
-    ArrayList<BookModel> readModel = new ArrayList<>();
+    ArrayList<BookModel> RFIDModel = new ArrayList<>();
     ArrayList<BookModel> bookModel = new ArrayList<>();
-    ArrayList<BorrowModel> borrowModel = new ArrayList<>();
 
 
     BookBUS bookBus;
     ReadBUS readBUS;
-    BorrowBUS borrowBUS;
+
     BorrowDetailBUS borrowDetailBUS;
 
-    Read readRFID;
+    Read readRFID = new Read();
     public Timer countDown = new Timer();
 
 
@@ -62,52 +62,17 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnConfim.setOnAction(this::btnConfirm);
         btn_Login.setOnAction(this::setBtn_Login);
+        btnScan.setOnAction(this::ScanRFID);
         tbl_book.setEditable(true);
+
         try {
             bookBus = new BookBUS();
             readBUS = new ReadBUS();
-            borrowBUS = new BorrowBUS();
-            borrowDetailBUS = new BorrowDetailBUS();
-
             bookModel = bookBus.getBookInfByID();
-
-            countDown.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    RFIDData.clear();
-                    readModel.clear();
-                    borrowModel.clear();
-
-                    readRFID.searchItem();
-//                    displayInfor();
-                    for (String s : readRFID.idRFID) {
-                        Memory.addToListIdBook(
-                                bookBus.getBookInfor(readBUS.getBookID(s)).getBookID()
-                        );
-
-//                        System.out.println(s);
-                        readModel.add(
-                                bookBus.getBookInfor(readBUS.getBookID(s))
-                        );
-                        borrowModel.add(
-                                borrowDetailBUS.getBorrowId(readBUS.getBookID(s))
-                        );
-                    }
-                    RFIDData.addAll(readModel);
-                    BorrowData.addAll(borrowModel);
-
-                    readRFID.idRFID = new ArrayList<>();
-
-                }
-            }, 0, 500);
-
-
-            for (BookModel model : bookModel) {
-                BookData.addAll(model);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         //book ID - RFID ID
         TableColumn bookID = new TableColumn("Book ID");
@@ -116,61 +81,79 @@ public class MainController implements Initializable {
         TableColumn bookTitle = new TableColumn("Book Title");
         bookTitle.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookTitle"));
 
-        TableColumn borrowID = new TableColumn("Borrow ID");
-
-
         TableColumn bookAuthor = new TableColumn("Book Author");
         bookAuthor.setCellValueFactory(new PropertyValueFactory<BookModel, String>("BookAuthor"));
-
-        //beginDate - Ngay muon sach
-        TableColumn beginDate = new TableColumn("Begin Date");
-        beginDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_beginDate"));
-
-        //returnDate - Ngay tra sach thuc te
-        TableColumn returnDate = new TableColumn("Return Date");
-        returnDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_returnDate"));
-
-        //endDate - Ngay dang ky tra sach
-        TableColumn endDate = new TableColumn("EndDate");
-        endDate.setCellValueFactory(new PropertyValueFactory<BorrowModel, Timestamp>("borrow_endDate"));
 
         //borrow Status - 0: registered, 1: received, 2: returned
         TableColumn bookStatus = new TableColumn("Book Status");
         bookStatus.setCellValueFactory(new PropertyValueFactory<BookModel, Integer>("BookStatus"));
 
         tbl_rfid.setItems(RFIDData);
-        tbl_rfid.setItems(BorrowData);
-        tbl_rfid.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus, beginDate, returnDate, endDate);
+        tbl_rfid.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus);
 
-        tbl_book.setItems(BookData);
-        tbl_book.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus);
+        //tbl_book.setItems(BookData);
+        // tbl_book.getColumns().addAll(bookID, bookTitle, bookAuthor, bookStatus);
 
         //handle double click on row
-        tbl_book.setRowFactory(tv -> {
-            TableRow<BookModel> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    BookModel rowData = row.getItem();
-                    System.out.println("Double click on: " + rowData.getBookID());
-                    //Open new Stage of Book Log
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("BookLog.fxml"));
-                        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-                        Stage stage = new Stage();
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.setTitle("BookLog!");
-                        BookLogController mainCtl = fxmlLoader.getController();
-                        //Pass whatever data you want. You can have multiple method calls here
-                        mainCtl.transferMessage(rowData.getBookID());
-                        stage.setScene(scene);
-                        stage.show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//        tbl_book.setRowFactory(tv -> {
+//            TableRow<BookModel> row = new TableRow<>();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+//                    BookModel rowData = row.getItem();
+//                    System.out.println("Double click on: " + rowData.getBookID());
+//                    //Open new Stage of Book Log
+//                    try {
+//                        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("BookLog.fxml"));
+//                        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+//                        Stage stage = new Stage();
+//                        stage.initModality(Modality.APPLICATION_MODAL);
+//                        stage.setTitle("BookLog!");
+//                        BookLogController mainCtl = fxmlLoader.getController();
+//                        //Pass whatever data you want. You can have multiple method calls here
+//                        mainCtl.transferMessage(rowData.getBookID());
+//                        stage.setScene(scene);
+//                        stage.show();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            return row;
+//        });
+    }
+
+    private void ScanRFID(ActionEvent actionEvent) {
+        RFIDData.clear();
+        RFIDModel.clear();
+        Memory.refeshList();
+
+        // search itemRFID
+        readRFID.searchItem();
+
+        // get all RFID above and
+        for (String s : readRFID.idRFID) {
+            if (bookBus.getBookInfor(readBUS.getBookID(s)).getBookStatus().equals("Received")) {
+                // add all id book to memory
+                String idBook = readBUS.getBookID(s);
+                Memory.addToListIdBook(
+                        bookBus.getBookInfor(idBook).getBookID()
+                );
+
+                // in ra ngoai table tbl rfid
+                if (!RFIDModel.contains(bookBus.getBookInfor(idBook))) {
+                    RFIDModel.add(
+                            bookBus.getBookInfor(idBook)
+                    );
                 }
-            });
-            return row;
-        });
+            }
+
+            // escape for
+            RFIDData.addAll(RFIDModel);
+        }
+
+
+        readRFID.idRFID = new ArrayList<>();
+
     }
 
     private void btnConfirm(ActionEvent actionEvent) {
@@ -206,3 +189,4 @@ public class MainController implements Initializable {
         }
     }
 }
+

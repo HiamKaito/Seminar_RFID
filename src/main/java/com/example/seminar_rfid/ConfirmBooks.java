@@ -55,8 +55,6 @@ public class ConfirmBooks implements Initializable {
         btnDung.setVisible(false);
         btnKhong.setText("Trở về");
 
-        //TODO m ngon thi m lam di @T.Anh
-        //TODO them vao database
 
         // read database
         try {
@@ -70,7 +68,7 @@ public class ConfirmBooks implements Initializable {
         // search and get borrow
         String borrowID = borrowDetailBUS.getBorrowId(Memory.listIdBook.get(0)).getBorrowID();
         BorrowModel borrowModel = borrowBUS.getBorrowModel(borrowID);
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         borrowModel.setBorrowStatus(2);
         borrowModel.setBorrow_returnDate(Timestamp.valueOf(timeStamp));
@@ -85,8 +83,10 @@ public class ConfirmBooks implements Initializable {
         // change all book status to 2
         for (int i = 0 ; i < Memory.getCountList() ; i++) {
             BookModel bookModel = bookBUS.getBookInfor(Memory.listIdBook.get(i));
+            System.out.println(bookModel.toString());
 
             bookModel.setBookStatus("2");
+
             try {
                 bookBUS.update(bookModel);
             } catch (Exception e) {

@@ -40,7 +40,12 @@ public class BorrowDetailBUS {
     public BorrowModel getBorrowId(String bookID){
         for (BorrowDetailModel model : list){
             if(model.getBookID().equals(bookID)){
-                return borrowBUS.getBookInfByID(model.getBorrowID());
+                try {
+                    borrowBUS = new BorrowBUS();
+                    return borrowBUS.getBookInfByID(model.getBorrowID());
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         }
         return null;

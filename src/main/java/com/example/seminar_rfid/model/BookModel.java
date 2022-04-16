@@ -57,4 +57,14 @@ public class BookModel {
     public void setBookTitle(String bookTitle) {
         BookTitle = bookTitle;
     }
+
+    @Override
+    public String toString() {
+        return "BookModel{" +
+                "BookID='" + BookID + '\'' +
+                ", BookAuthor='" + BookAuthor + '\'' +
+                ", BookStatus='" + BookStatus + '\'' +
+                ", BookTitle='" + BookTitle + '\'' +
+                '}';
+    }
 }
