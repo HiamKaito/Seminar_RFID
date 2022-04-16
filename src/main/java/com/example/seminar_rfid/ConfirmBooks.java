@@ -1,5 +1,10 @@
 package com.example.seminar_rfid;
 
+import com.example.seminar_rfid.BUS.BookBUS;
+import com.example.seminar_rfid.BUS.BorrowBUS;
+import com.example.seminar_rfid.BUS.BorrowDetailBUS;
+import com.example.seminar_rfid.model.BookModel;
+import com.example.seminar_rfid.model.BorrowModel;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +20,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,6 +34,9 @@ public class ConfirmBooks implements Initializable {
     @FXML
     Label lblTraSach;
 
+    BorrowBUS borrowBUS;
+    BorrowDetailBUS borrowDetailBUS;
+    BookBUS bookBUS;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -34,18 +46,8 @@ public class ConfirmBooks implements Initializable {
     }
 
     private void btnKhong(ActionEvent actionEvent) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("ConfirmBooks.fxml"));
-            Parent root = null;
-            root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.show();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void btnDung(ActionEvent actionEvent) {
@@ -56,8 +58,45 @@ public class ConfirmBooks implements Initializable {
         //TODO m ngon thi m lam di @T.Anh
         //TODO them vao database
 
+        // read database
+        try {
+            bookBUS = new BookBUS();
+            borrowBUS = new BorrowBUS();
+            borrowDetailBUS = new BorrowDetailBUS();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // search and get borrow
+        String borrowID = borrowDetailBUS.getBorrowId(Memory.listIdBook.get(0)).getBorrowID();
+        BorrowModel borrowModel = borrowBUS.getBorrowModel(borrowID);
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+        borrowModel.setBorrowStatus(2);
+        borrowModel.setBorrow_returnDate(Timestamp.valueOf(timeStamp));
+
+        // change borrow status to 2
+        try {
+            borrowBUS.update(borrowModel);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // change all book status to 2
+        for (int i = 0 ; i < Memory.getCountList() ; i++) {
+            BookModel bookModel = bookBUS.getBookInfor(Memory.listIdBook.get(i));
+
+            bookModel.setBookStatus("2");
+            try {
+                bookBUS.update(bookModel);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
 
 
+        // change button position
         Timer countDown = new Timer();
         countDown.scheduleAtFixedRate(new TimerTask() {
             int x = 100;

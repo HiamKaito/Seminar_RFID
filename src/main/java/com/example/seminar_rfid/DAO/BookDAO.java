@@ -1,9 +1,11 @@
 package com.example.seminar_rfid.DAO;
 
 import com.example.seminar_rfid.model.BookModel;
+import com.example.seminar_rfid.model.BorrowModel;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BookDAO {
     MyConnectUnit connect;
@@ -36,5 +38,24 @@ public class BookDAO {
 
     public ArrayList<BookModel> readDB() throws Exception {
         return readDB(null);
+    }
+
+    public Boolean update(BookModel model) throws Exception {
+        connect = new MyConnectUnit();
+
+        // tạo đối tượng truyền vào
+        HashMap<String, Object> insertValues = new HashMap<>();
+        insertValues.put("book_id", model.getBookID());
+        insertValues.put("book_title", model.getBookTitle());
+        insertValues.put("book_status", model.getBookStatus());
+        insertValues.put("book_author", model.getBookAuthor());
+
+
+        String condition = " UID = '" + model.getBookID() + "'";
+
+        Boolean check = connect.Update(strTableName, insertValues, condition);
+
+        connect.Close();
+        return check;
     }
 }

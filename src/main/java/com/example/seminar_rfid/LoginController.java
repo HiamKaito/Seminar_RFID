@@ -40,9 +40,9 @@ public class LoginController implements Initializable {
     }
 
     private void setBtn_login(ActionEvent actionEvent) {
-        if(!tf_username.getText().equals("") && !pf_password.getText().equals("")){
+        if (!tf_username.getText().equals("") && !pf_password.getText().equals("") && tf_username.getText().equals("admin")) {
             try {
-                if(userBUS.kiemTraDangNhap(tf_username.getText(), pf_password.getText())) {
+                if (userBUS.kiemTraDangNhap(tf_username.getText(), pf_password.getText())) {
                     FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("ThongKe.fxml"));
                     Parent root = fxmlLoader.load();
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -50,9 +50,9 @@ public class LoginController implements Initializable {
                     stage.setResizable(false);
                     stage.show();
                 }
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } else {
             System.out.println("Sai username or pass");

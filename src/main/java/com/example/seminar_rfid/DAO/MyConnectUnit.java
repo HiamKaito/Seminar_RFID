@@ -14,7 +14,7 @@ public class MyConnectUnit {
 
     // hàm khởi tạo kết nối mặc định
     public MyConnectUnit() {
-        connect = new MySQLConnection("localhost", "root", "", "seminar");
+        connect = new MySQLConnection("localhost", "root", "", "RFID");
     }
 
     // hàm khởi tạo cơ bản

@@ -175,29 +175,33 @@ public class MainController implements Initializable {
 
     private void btnConfirm(ActionEvent actionEvent) {
         try {
-            countDown.cancel();
+            if (Memory.getCountList() > 0) {
+                countDown.cancel();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("ConfirmBooks.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.show();
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ConfirmBooks.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Login!");
+                stage.setScene(scene);
+                stage.show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setBtn_Login(ActionEvent event){
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Login!");
-            stage.setScene(scene);
+    private void setBtn_Login(ActionEvent event) {
+        try {
+            countDown.cancel();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("Login.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
             stage.show();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

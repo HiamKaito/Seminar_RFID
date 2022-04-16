@@ -2,6 +2,7 @@ package com.example.seminar_rfid.BUS;
 
 import com.example.seminar_rfid.DAO.BookDAO;
 import com.example.seminar_rfid.model.BookModel;
+import com.example.seminar_rfid.model.BorrowModel;
 
 import java.util.ArrayList;
 
@@ -33,5 +34,21 @@ public class BookBUS {
         }
 
         return null;
+    }
+
+
+    public Boolean update(BookModel DTO) throws Exception {
+        if (bookDAO.update(DTO)) {
+
+            // duyệt từng phẩn tử
+            for (BookModel dto : bookModelsArrayList) {
+                if (dto.getBookID().equals(DTO.getBookID())) {
+                    dto.setBookStatus(DTO.getBookStatus());
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

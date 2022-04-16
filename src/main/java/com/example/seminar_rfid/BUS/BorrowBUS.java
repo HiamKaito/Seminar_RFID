@@ -43,4 +43,29 @@ public class BorrowBUS {
         }
     }
 
+    public BorrowModel getBorrowModel(String borrowID) {
+        for (BorrowModel model : bookModelsArrayList) {
+            if (model.getBorrowID().equals(borrowID)) {
+                return model;
+            }
+        }
+        return null;
+    }
+
+    public Boolean update(BorrowModel DTO) throws Exception {
+        if (DAO.update(DTO)) {
+
+            // duyệt từng phẩn tử
+            for (BorrowModel dto : bookModelsArrayList) {
+                if (dto.getBorrowID().equals(DTO.getBorrowID())) {
+                    dto.setBorrow_returnDate(DTO.getBorrow_returnDate());
+                    dto.setBorrowStatus(DTO.getBorrowStatus());
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
