@@ -95,6 +95,7 @@ public class ConfirmBooks implements Initializable {
 
         }
 
+        Memory.refeshList();
 
         // change button position
         Timer countDown = new Timer();
