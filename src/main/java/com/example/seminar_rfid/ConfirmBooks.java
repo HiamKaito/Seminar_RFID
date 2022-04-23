@@ -85,7 +85,7 @@ public class ConfirmBooks implements Initializable {
             BookModel bookModel = bookBUS.getBookInfor(Memory.listIdBook.get(i));
             System.out.println(bookModel.toString());
 
-            bookModel.setBookStatus("2");
+            bookModel.setBookStatus("Returned");
 
             try {
                 bookBUS.update(bookModel);
