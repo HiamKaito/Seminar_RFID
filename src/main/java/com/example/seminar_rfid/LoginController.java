@@ -47,6 +47,7 @@ public class LoginController implements Initializable {
                     Parent root = fxmlLoader.load();
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     stage.setScene(new Scene(root));
+                    stage.setTitle("Thống kê");
                     stage.setResizable(false);
                     stage.show();
                 }

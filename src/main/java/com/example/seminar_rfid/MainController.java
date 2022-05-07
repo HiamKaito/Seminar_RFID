@@ -33,7 +33,7 @@ import java.util.Timer;
 
 public class MainController implements Initializable {
     @FXML
-    protected TableView tbl_book, tbl_rfid;
+    protected TableView  tbl_rfid;
     @FXML
     Button btnConfim, btn_Login, btnScan;
 
@@ -63,7 +63,6 @@ public class MainController implements Initializable {
         btnConfim.setOnAction(this::btnConfirm);
         btn_Login.setOnAction(this::setBtn_Login);
         btnScan.setOnAction(this::ScanRFID);
-        tbl_book.setEditable(true);
 
         try {
             bookBus = new BookBUS();
