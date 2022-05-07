@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.seminar_rfid.MainController">
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.seminar_rfid.MainController">
    <children>
       <BorderPane layoutY="2.0" prefHeight="500.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
          <top>
@@ -50,15 +50,6 @@
                               </Pane>
                            </items>
                         </SplitPane>
-                     </content>
-                  </Tab>
-                <Tab disable="true" text="Books">
-                     <content>
-                        <TableView fx:id="tbl_book" prefHeight="200.0" prefWidth="200.0">
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
                      </content>
                   </Tab>
               </tabs>
